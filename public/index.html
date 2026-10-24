@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sistem Pemanggilan Paket KCU Palangkaraya 73000</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css?v=10.0">
+</head>
+<body>
+    <div id="toast-container"></div>
+
+    <div id="login-screen" class="screen active">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="logo-icon"><i class="fas fa-box-open"></i></div>
+                <h2>Masuk ke Sistem</h2>
+                <p>Sesi login tunggal diamankan</p>
+            </div>
+            <div class="form-group">
+                <label>Pilih Petugas</label>
+                <select id="role-select">
+                    <option value="Petugas Depan">Petugas Depan</option>
+                    <option value="Petugas Belakang">Petugas Belakang</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Kata Sandi</label>
+                <input type="password" id="password-input" placeholder="Masukkan Kata Sandi" onkeypress="if(event.key==='Enter') login()">
+            </div>
+            <button class="btn-primary" onclick="login()">Otorisasi Masuk</button>
+            <p id="login-error" class="error-text"></p>
+            <div class="copyright">© 2026 Ronald. All rights reserved.</div>
+        </div>
+    </div>
+
+    <div id="app-screen" class="screen">
+        <nav class="top-navbar">
+            <div class="nav-left">
+                <div class="nav-logo"><i class="fas fa-box-open"></i> Sistem Pemanggilan Paket</div>
+                <div class="role-badge" id="user-role-display">Petugas</div>
+            </div>
+            <div class="nav-right">
+                <div class="partner-status" id="partner-status-badge">
+                    <span class="status-dot offline" id="partner-dot"></span> <span id="partner-text">Offline</span>
+                </div>
+                <div class="time-display" id="clock">00:00</div>
+                <button onclick="logout()" class="btn-outline-danger" id="btn-logout"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
+        </nav>
+
+        <div class="main-layout">
+            <div class="content-column">
+                <div class="panel-section">
+                    <div class="section-title">
+                        <h3>Aksi Prioritas</h3>
+                        <p>Kirim pemberitahuan ke petugas.</p>
+                    </div>
+                    <div class="action-grid" id="action-grid-container">
+                    </div>
+                </div>
+
+                <div class="panel-section audio-section">
+                    <div class="section-title">
+                        <h3>Interkom Suara</h3>
+                        <p>Saluran komunikasi langsung.</p>
+                    </div>
+                    <div class="audio-panel">
+                        <div class="audio-status" id="voice-status-text">Siap Dihubungkan</div>
+                        <div class="audio-actions">
+                            <button id="btn-start-call" class="btn-audio start" onclick="startCall()" disabled>
+                                <i class="fas fa-microphone"></i> Mulai Bicara
+                            </button>
+                            <button id="btn-end-call" class="btn-audio end hidden" onclick="endCall()">
+                                <i class="fas fa-phone-slash"></i> Putus
+                            </button>
+                        </div>
+                        <audio id="remote-audio" autoplay playsinline></audio>
+                    </div>
+                </div>
+            </div>
+
+            <aside class="chat-column">
+                <div class="chat-header">
+                    <h4><i class="fas fa-comments"></i> Pesan Koordinasi</h4>
+                </div>
+                <div class="chat-body" id="chat-box">
+                    <div class="chat-bubble system">Enkripsi end-to-end diaktifkan.</div>
+                </div>
+                <div class="chat-footer">
+                    <input type="text" id="chat-input" placeholder="Tulis pesan..." onkeypress="handleEnter(event)" disabled>
+                    <button id="btn-send-chat" onclick="sendMessage()" disabled><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </aside>
+        </div>
+        <div class="app-copyright">© 2026 Ronald. All rights reserved.</div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js?v=10.0"></script>
+</body>
+</html>
