@@ -141,7 +141,7 @@ socket.on('online_status', (statusData) => {
 
     if (isPartnerOnline) {
         partnerDot.className = 'status-dot online';
-        partnerText.innerText = 'Mitra Online';
+        partnerText.innerText = 'Online';
         btnStartCall.disabled = false;
         chatInput.disabled = false;
         btnSendChat.disabled = false;
@@ -150,7 +150,7 @@ socket.on('online_status', (statusData) => {
         if (btnBelum) btnBelum.disabled = false;
     } else {
         partnerDot.className = 'status-dot offline';
-        partnerText.innerText = 'Mitra Offline';
+        partnerText.innerText = 'Offline';
         btnStartCall.disabled = true;
         chatInput.disabled = true;
         btnSendChat.disabled = true;
