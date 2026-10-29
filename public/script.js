@@ -141,7 +141,7 @@ socket.on('online_status', (statusData) => {
 
     if (isPartnerOnline) {
         partnerDot.className = 'status-dot online';
-        partnerText.innerText = 'Online';
+        partnerText.innerText = 'Mitra Online';
         btnStartCall.disabled = false;
         chatInput.disabled = false;
         btnSendChat.disabled = false;
@@ -150,7 +150,7 @@ socket.on('online_status', (statusData) => {
         if (btnBelum) btnBelum.disabled = false;
     } else {
         partnerDot.className = 'status-dot offline';
-        partnerText.innerText = 'Offline';
+        partnerText.innerText = 'Mitra Offline';
         btnStartCall.disabled = true;
         chatInput.disabled = true;
         btnSendChat.disabled = true;
@@ -204,6 +204,34 @@ function speakText(textToSpeak) {
         
         window.speechSynthesis.speak(utterance);
     }
+}
+
+function playChatNotification() {
+    if (!audioCtx) unlockAudio();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    
+    const now = audioCtx.currentTime;
+    
+    function playNote(freq, startTime) {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, startTime);
+        
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        gain.gain.setValueAtTime(0, startTime);
+        gain.gain.linearRampToValueAtTime(0.9, startTime + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.4);
+        
+        osc.start(startTime);
+        osc.stop(startTime + 0.45);
+    }
+    
+    playNote(987.77, now);
+    playNote(1318.51, now + 0.12);
 }
 
 function playPleasantNotificationSound(spokenText) {
@@ -262,9 +290,9 @@ function playPhoneRingtone() {
 
 function sendNotification(jenis) {
     let textMessage = '';
-    if (jenis === 'PANGGIL') textMessage = 'Permisi, ada pengambilan paket.';
-    else if (jenis === 'AMBIL') textMessage = 'Paket siap untuk diambil.';
-    else if (jenis === 'BELUM') textMessage = 'Paket belum siap untuk diambil.';
+    if (jenis === 'PANGGIL') textMessage = 'Permisi, Ada Pengambilan Paket';
+    else if (jenis === 'AMBIL') textMessage = 'Paket Siap untuk diambil';
+    else if (jenis === 'BELUM') textMessage = 'Paket belum siap untuk diambil';
 
     socket.emit('notification', { sender: currentUserRole, type: jenis, text: textMessage });
     appendChat('Sistem', textMessage, true, true);
@@ -296,7 +324,10 @@ function sendMessage() {
 
 function handleEnter(e) { if (e.key === 'Enter') sendMessage(); }
 
-socket.on('chat_message', (data) => { appendChat(data.sender, data.text, false); });
+socket.on('chat_message', (data) => { 
+    playChatNotification();
+    appendChat(data.sender, data.text, false); 
+});
 
 function appendChat(sender, text, isMe, isSystem = false) {
     const div = document.createElement('div');
